@@ -5,8 +5,6 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GameFramework/ProjectileMovementComponent.h"
-#include "NiagaraComponent.h"
-#include "NiagaraFunctionLibrary.h"
 #include "Projectile.generated.h"
 
 UCLASS()
@@ -32,20 +30,9 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* ProjectileMovementComponent;
 
-	UPROPERTY(VisibleAnywhere, Category = "Effects")
-	UNiagaraComponent* TrailParticles;
-
-	UPROPERTY(EditAnywhere, Category = "Effects")
-	UNiagaraSystem* HitParticles;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Effects")
-	class USoundBase* ImpactSound;
-
 	UPROPERTY(VisibleDefaultsOnly, Category = "Projectile Mechanic")
 	float Damage = 25.0f;
 
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
-	virtual void DisplayEffects(const FHitResult& Hit);
 };
