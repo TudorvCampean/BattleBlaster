@@ -33,6 +33,7 @@ void ALaserProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 			if (OtherActor->IsA(APawn::StaticClass())) {
 				UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, UDamageType::StaticClass());
 
+				DisplayEffects(Hit);
 				Destroy();
 				return;
 			}
@@ -41,6 +42,7 @@ void ALaserProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 		CurrentLaserBounces++;
 
 		if (CurrentLaserBounces >= MaxLaserBounces) {
+			DisplayEffects(Hit);
 			Destroy();
 		}
 	}
