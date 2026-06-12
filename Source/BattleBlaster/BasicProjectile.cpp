@@ -39,7 +39,6 @@ void ABasicProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 			if (OtherActor->IsA(APawn::StaticClass())) {
 				UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, UDamageType::StaticClass());
 
-				DisplayEffects(Hit);
 				Destroy();
 				return;
 			}
@@ -49,9 +48,7 @@ void ABasicProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherAct
 		Damage -= DamageDecreasePerBounce;
 
 		if (Damage <= MinProjectileDamage || ProjectileCurrentBounce >= ProjectileMaxBounce) {
-			DisplayEffects(Hit);
 			Destroy();
 		}
 	}
 }
-
