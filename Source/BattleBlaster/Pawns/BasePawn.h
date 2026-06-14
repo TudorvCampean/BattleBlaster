@@ -6,7 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Components/CapsuleComponent.h"
 #include "NiagaraFunctionLibrary.h"
-#include "Projectile.h"
+#include "Projectiles/Projectile.h"
 #include "BasePawn.generated.h"
 
 

@@ -5,8 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "Tank.h"
-#include "ScreenMessage.h"
+#include "Pawns/Tank.h"
+#include "UI/ScreenMessage.h"
 #include "BattleBlasterGameMode.generated.h"
 
 

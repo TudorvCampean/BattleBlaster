@@ -8,7 +8,9 @@ public class BattleBlaster : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "Niagara" });
+        PublicIncludePaths.Add(ModuleDirectory);
+
+        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "Niagara" });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

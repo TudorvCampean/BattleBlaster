@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h" 
-#include "BattleBlasterGameMode.h"
+#include "GameEntities/BattleBlasterGameMode.h"
 #include "HealthComponent.generated.h"
 
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
