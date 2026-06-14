@@ -33,6 +33,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Settings|Logic")
 	int32 MapSeed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Settings|Logic")
+	bool bUseRandomSeed;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map Settings|Assets")
 	TArray<TSubclassOf<AActor>> AvailableTileClasses;
 
@@ -44,10 +47,15 @@ protected:
 	UPROPERTY()
 	TArray<AActor*> SpawnedTiles;
 
+	FVector SafePlayerSpawnLocation;
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Map Functions")
 	void GenerateMap();
+
+	UFUNCTION(BlueprintCallable, Category = "Map Data")
+	FVector GetPlayerSpawnLocation() const;
 
 protected:
 
