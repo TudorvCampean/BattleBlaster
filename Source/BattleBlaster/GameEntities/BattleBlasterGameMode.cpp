@@ -4,7 +4,7 @@
 #include "BattleBlasterGameMode.h"
 #include "Kismet/GameplayStatics.h"
 #include "TimerManager.h"
-#include "Tower.h"
+#include "Pawns/Tower.h"
 #include "BattleBlasterGameInstance.h"
 
 void ABattleBlasterGameMode::BeginPlay()
