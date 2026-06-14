@@ -46,7 +46,7 @@ protected:
 
 public:
 
-	UPROPERTY(EditAnywhere, Category = "Map Functions")
+	UFUNCTION(BlueprintCallable, Category = "Map Functions")
 	void GenerateMap();
 
 protected:
