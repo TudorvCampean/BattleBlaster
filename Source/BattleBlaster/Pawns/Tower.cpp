@@ -22,7 +22,7 @@ void ATower::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	if (InFireRange()) {				
-		RotateTurret(Tank->GetActorLocation());		
+		RotateTurretHorizontal(Tank->GetActorLocation());
 	}
 }
 

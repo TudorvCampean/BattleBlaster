@@ -6,6 +6,7 @@
 #include "GameFramework/Pawn.h"
 #include "Components/CapsuleComponent.h"
 #include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 #include "Projectiles/Projectile.h"
 #include "BasePawn.generated.h"
 
@@ -20,16 +21,19 @@ public:
 	ABasePawn();
 
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Pawn Components|PawnCore")
 	UCapsuleComponent* CapsuleComponent;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Pawn Components|PawnBase")
 	UStaticMeshComponent* BaseMesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Pawn Components|PawnBody")
 	UStaticMeshComponent* TurretMesh;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "Pawn Components|PawnBarrel")
+	UStaticMeshComponent* TurretBarrelMesh;
+
+	UPROPERTY(VisibleAnywhere, Category = "Pawn Components|PawnProjectile")
 	USceneComponent* ProjectileSpawnPoint;
 
 	UPROPERTY(EditAnywhere)
@@ -38,10 +42,12 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	UNiagaraSystem* DestructionParticles;
 	
-	void RotateTurret(FVector LookAtTarget);
+	void RotateTurretHorizontal(FVector LookAtTarget);
+	void AimBarrelVertical(FVector LookAtTarget);
 
 	virtual void Fire();
 
 	void HandleDestruction();
+
 
 };

@@ -65,7 +65,7 @@ public:
 	bool bCanFire = true;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float FireCooldown = 10.0f;
+	float FireCooldown = 5.0f;
 
 	FTimerHandle FireTimerHandle;
 	virtual void Fire() override;

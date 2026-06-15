@@ -45,7 +45,7 @@ void ATank::Tick(float DeltaTime)
 		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 		
 		
-		RotateTurret(HitResult.ImpactPoint);		
+		RotateTurretHorizontal(HitResult.ImpactPoint);
 	}
 }
 
