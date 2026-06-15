@@ -42,10 +42,12 @@ void ATank::Tick(float DeltaTime)
 
 	if (PlayerController) {
 		FHitResult HitResult;
-		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+		bool bHitSucces = PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
 		
-		
-		RotateTurretHorizontal(HitResult.ImpactPoint);
+		if (bHitSucces) {
+			RotateTurretHorizontal(HitResult.ImpactPoint);
+			AimBarrelVertical(HitResult.ImpactPoint);
+		}		
 	}
 }
 

@@ -36,6 +36,12 @@ public:
 	UPROPERTY(VisibleAnywhere, Category = "Pawn Components|PawnProjectile")
 	USceneComponent* ProjectileSpawnPoint;
 
+	UPROPERTY(EditAnywhere, Category = "ControlProperties|Combat")
+	float MaxPitchAngle = 45.0f;
+
+	UPROPERTY(EditAnywhere, Category = "ControlProperties|Combat")
+	float MinPitchAngle = -10.0f;
+
 	UPROPERTY(EditAnywhere)
 	TSubclassOf<AProjectile> ProjectileClass;
 

@@ -23,6 +23,7 @@ void ATower::Tick(float DeltaTime)
 
 	if (InFireRange()) {				
 		RotateTurretHorizontal(Tank->GetActorLocation());
+		AimBarrelVertical(Tank->GetActorLocation());
 	}
 }
 

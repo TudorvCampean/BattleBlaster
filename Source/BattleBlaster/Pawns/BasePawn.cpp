@@ -48,7 +48,9 @@ void ABasePawn::AimBarrelVertical(FVector LookAtTarget)
 	// transform global vector in local space so we can aim even if we are sitting on a slope
 	FVector LocalDirection = TurretMesh->GetComponentTransform().InverseTransformVector(VectorToTarget);
 	FRotator LocalLookAtRotation = LocalDirection.Rotation();
-	FRotator TargetRelativeRotation = FRotator(LocalLookAtRotation.Pitch, 0.0f, 0.0f);
+
+	float ClampedPitch = FMath::Clamp(LocalLookAtRotation.Pitch, MinPitchAngle,MaxPitchAngle);
+	FRotator TargetRelativeRotation = FRotator(ClampedPitch, 0.0f, 0.0f);
 
 	FRotator IntepolatedRotation = FMath::RInterpTo(
 		TurretBarrelMesh->GetRelativeRotation(),
