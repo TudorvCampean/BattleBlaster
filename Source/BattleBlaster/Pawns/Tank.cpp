@@ -42,10 +42,26 @@ void ATank::Tick(float DeltaTime)
 
 	if (PlayerController) {
 		FHitResult HitResult;
-		PlayerController->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
+		bool bHitSucces = PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult);
 		
-		
-		RotateTurret(HitResult.ImpactPoint);		
+		FVector TargetLocation;
+
+		if (bHitSucces) {
+			TargetLocation = HitResult.ImpactPoint;
+		}		
+		else {
+			FVector MouseWorldLocation;
+			FVector MouseWorldDirection;
+
+			if (PlayerController->DeprojectMousePositionToWorld(MouseWorldLocation, MouseWorldDirection)) {
+				TargetLocation = MouseWorldLocation + (MouseWorldDirection * 10000.0f);
+			}
+			else {
+				TargetLocation = GetActorLocation() + GetActorForwardVector() * 1000.0f;
+			}
+		}
+		RotateTurretHorizontal(TargetLocation);
+		AimBarrelVertical(TargetLocation);
 	}
 }
 

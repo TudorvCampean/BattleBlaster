@@ -34,16 +34,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Control|Input")
 	UInputMappingContext* DefaultMappingContext;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Control|Input")
 	UInputAction* MoveAction;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Control|Input")
 	UInputAction* TurnAction;
 
-	UPROPERTY(EditAnywhere, Category = "Input")
+	UPROPERTY(EditAnywhere, Category = "Control|Input")
 	UInputAction* FireAction;
 
 
@@ -53,10 +53,10 @@ public:
 	UPROPERTY(VisibleAnywhere)	
 	UCameraComponent* CameraComp;
 
-	UPROPERTY(EditAnywhere, Category = "Movement")
+	UPROPERTY(EditAnywhere, Category = "ControlProperties|Movement")
 	float Speed = 300.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Movement")
+	UPROPERTY(EditAnywhere, Category = "ControlProperties|Movement")
 	float TurnRate = 5.0f;
 
 	APlayerController* PlayerController;
@@ -65,7 +65,7 @@ public:
 	bool bCanFire = true;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float FireCooldown = 10.0f;
+	float FireCooldown = 5.0f;
 
 	FTimerHandle FireTimerHandle;
 	virtual void Fire() override;

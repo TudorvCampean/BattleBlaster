@@ -4,6 +4,8 @@
 #include "Projectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/Controller.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -18,6 +20,8 @@ AProjectile::AProjectile()
 
 	TrailParticles = CreateDefaultSubobject<UNiagaraComponent>(TEXT("TrailParticles"));
 	TrailParticles->SetupAttachment(RootComponent);
+
+	InitialLifeSpan = 5.0f;
 
 }
 

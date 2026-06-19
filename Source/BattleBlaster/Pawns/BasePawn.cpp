@@ -2,6 +2,8 @@
 
 
 #include "BasePawn.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 
 // Sets default values
 ABasePawn::ABasePawn()
@@ -18,11 +20,15 @@ ABasePawn::ABasePawn()
 	TurretMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretMesh"));
 	TurretMesh->SetupAttachment(BaseMesh);
 
+	TurretBarrelMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TurretBarrelMesh"));
+	TurretBarrelMesh->SetupAttachment(TurretMesh);
+
+
 	ProjectileSpawnPoint = CreateDefaultSubobject<USceneComponent>(TEXT("ProjectileSpawnPoint"));
-	ProjectileSpawnPoint->SetupAttachment(TurretMesh);
+	ProjectileSpawnPoint->SetupAttachment(TurretBarrelMesh);
 }
 
-void ABasePawn::RotateTurret(FVector LookAtTarget)
+void ABasePawn::RotateTurretHorizontal(FVector LookAtTarget)
 {
 	FVector VectorToTarget = LookAtTarget - TurretMesh->GetComponentLocation();
 	FRotator LookAtRotation = FRotator(0.0f, VectorToTarget.Rotation().Yaw, 0.0f );
@@ -34,6 +40,27 @@ void ABasePawn::RotateTurret(FVector LookAtTarget)
 		10.0f);
 
 	TurretMesh->SetWorldRotation(InterpolatedRotation);
+}
+
+void ABasePawn::AimBarrelVertical(FVector LookAtTarget)
+{
+	FVector VectorToTarget = LookAtTarget - TurretBarrelMesh->GetComponentLocation();
+	// transform global vector in local space so we can aim even if we are sitting on a slope
+	FVector LocalDirection = TurretMesh->GetComponentTransform().InverseTransformVector(VectorToTarget);
+	FRotator LocalLookAtRotation = LocalDirection.Rotation();
+
+	float ClampedPitch = FMath::Clamp(LocalLookAtRotation.Pitch, MinPitchAngle,MaxPitchAngle);
+	FRotator TargetRelativeRotation = FRotator(ClampedPitch, 0.0f, 0.0f);
+
+	FRotator IntepolatedRotation = FMath::RInterpTo(
+		TurretBarrelMesh->GetRelativeRotation(),
+		TargetRelativeRotation,
+		GetWorld()->GetDeltaSeconds(),
+		10.0f
+	);
+
+	TurretBarrelMesh->SetRelativeRotation(IntepolatedRotation);
+
 }
 
 void ABasePawn::Fire()
