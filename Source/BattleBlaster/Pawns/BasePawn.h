@@ -37,7 +37,7 @@ public:
 	USceneComponent* ProjectileSpawnPoint;
 
 	UPROPERTY(EditAnywhere, Category = "ControlProperties|Combat")
-	float MaxPitchAngle = 45.0f;
+	float MaxPitchAngle = 90.0f;
 
 	UPROPERTY(EditAnywhere, Category = "ControlProperties|Combat")
 	float MinPitchAngle = -10.0f;
