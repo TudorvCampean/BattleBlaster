@@ -21,6 +21,8 @@ AProjectile::AProjectile()
 	TrailParticles = CreateDefaultSubobject<UNiagaraComponent>(TEXT("TrailParticles"));
 	TrailParticles->SetupAttachment(RootComponent);
 
+	InitialLifeSpan = 5.0f;
+
 }
 
 // Called when the game starts or when spawned
