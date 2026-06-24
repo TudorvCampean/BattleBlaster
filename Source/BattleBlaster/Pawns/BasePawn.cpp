@@ -71,6 +71,7 @@ void ABasePawn::Fire()
 	AProjectile* Projectile = GetWorld()->SpawnActor<AProjectile>(ProjectileClass, SpawnLocation, SpawnRotation);
 	if (Projectile) {
 		Projectile->SetOwner(this);
+		Projectile->InitializeModifiers(WeaponModifiers);
 	}
 
 }
