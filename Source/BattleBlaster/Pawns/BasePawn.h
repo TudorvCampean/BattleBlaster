@@ -47,6 +47,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	UNiagaraSystem* DestructionParticles;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Combat|Modifiers")
+	TArray<TSubclassOf<UProjectileModifier>> WeaponModifiers;
 	
 	void RotateTurretHorizontal(FVector LookAtTarget);
 	void AimBarrelVertical(FVector LookAtTarget);

@@ -21,9 +21,9 @@ void ATower::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (InFireRange()) {				
-		RotateTurretHorizontal(Tank->GetActorLocation());
-		AimBarrelVertical(Tank->GetActorLocation());
+	if (InFireRange() && PlayerPawn) {
+		RotateTurretHorizontal(PlayerPawn->GetActorLocation());
+		AimBarrelVertical(PlayerPawn->GetActorLocation());
 	}
 }
 
@@ -34,15 +34,15 @@ void ATower::Fire()
 
 void ATower::CheckFireCondition()
 {
-	if (Tank && Tank->IsAlive && InFireRange()) {
-		Fire();		
+	if (PlayerPawn && PlayerPawn->IsAlive && InFireRange()) {
+		Fire();
 	}
 }
 
 bool ATower::InFireRange()
 {
-	if (Tank) {
-		float Distance = FVector::Dist(this->GetActorLocation(), Tank->GetActorLocation());
+	if (PlayerPawn) {
+		float Distance = FVector::Dist(this->GetActorLocation(), PlayerPawn->GetActorLocation());
 		if (Distance <= FireRange) {
 			return true;
 		}
@@ -53,7 +53,5 @@ bool ATower::InFireRange()
 void ATower::HandleDestruction()
 {
 	Super::HandleDestruction();
-
 	Destroy();
-	UE_LOG(LogTemp, Display, TEXT("Tower Handle Destruction"));
 }

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
 #include "Kismet/GameplayStatics.h"
-#include "Pawns/Tank.h"
+#include "Pawns/PlayerPawn.h"
 #include "UI/ScreenMessage.h"
 #include "BattleBlasterGameMode.generated.h"
 
@@ -23,7 +23,7 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
-	ATank* Tank;
+	APlayerPawn* Player;
 	int32 TowerCount;	
 
 	UPROPERTY(EditAnywhere)

@@ -4,8 +4,9 @@
 
 #include "CoreMinimal.h"
 #include "BasePawn.h"
-#include "Tank.h"
+#include "PlayerPawn.h"
 #include "Tower.generated.h"
+
 
 /**
  * 
@@ -26,7 +27,7 @@ public:
 	virtual void Fire() override;
 
 
-	ATank* Tank;	
+	APlayerPawn* PlayerPawn;
 
 	UPROPERTY(EditAnywhere)
 	float FireRange = 300.0f;

@@ -19,6 +19,7 @@ public:
 	int32 MaxBounces = 3;
 
 protected:
+	virtual void OnProjectileSpawn_Implementation(AProjectile* Projectile) override;
 
 	virtual bool OnProjectileHit_Implementation(AProjectile* Projectile, const FHitResult& Hit, AActor* OtherActor) override;
 

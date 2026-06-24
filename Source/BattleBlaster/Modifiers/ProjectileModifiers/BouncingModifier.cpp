@@ -3,8 +3,20 @@
 
 #include "Modifiers/ProjectileModifiers/BouncingModifier.h"
 #include "Projectiles/Projectile.h"
+#include "Kismet/GameplayStatics.h"
+#include "GameFramework/Controller.h"
 #include "BouncingModifier.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+
+void UBouncingModifier::OnProjectileSpawn_Implementation(AProjectile* Projectile)
+{
+	if (Projectile && Projectile->ProjectileMovementComponent)	{
+		
+		Projectile->ProjectileMovementComponent->bShouldBounce = true;		
+		Projectile->ProjectileMovementComponent->Bounciness = 1.0f;
+		Projectile->ProjectileMovementComponent->Friction = 0.0f;		
+	}
+}
 
 bool UBouncingModifier::OnProjectileHit_Implementation(AProjectile* Projectile, const FHitResult& Hit, AActor* OtherActor)
 {
@@ -13,17 +25,15 @@ bool UBouncingModifier::OnProjectileHit_Implementation(AProjectile* Projectile, 
 	}
 
 	if (CurrentBounces < MaxBounces) {
-		CurrentBounces++;
+		CurrentBounces++;		
+		Projectile->SetLifeSpan(15.0f);
+		
+		return true;
+	}
 
-		if (Projectile && Projectile->ProjectileMovementComponent) {
-			FVector CurrentVelocity = Projectile->ProjectileMovementComponent->Velocity;
-			FVector ReflectedVelocity = CurrentVelocity.MirrorByVector(Hit.ImpactNormal);
-
-			Projectile->ProjectileMovementComponent->Velocity = ReflectedVelocity;
-			Projectile->SetActorRotation(ReflectedVelocity.Rotation());
-
-			return true;
-		}
+	if (Projectile && Projectile->ProjectileMovementComponent)
+	{
+		Projectile->ProjectileMovementComponent->bShouldBounce = false;
 	}
 	return false;
 }

@@ -9,29 +9,25 @@
 #include "InputAction.h"
 #include "InputActionValue.h"
 #include "EnhancedInputComponent.h"
-#include "Tank.generated.h"
+#include "PlayerPawn.generated.h" // S-a schimbat reflexia generată
 
 class UCameraComponent;
 class UInputMappingContext;
 
 /**
- * 
+ * Clasa generică pentru Jucător (fostul Tank)
  */
-UCLASS()
-class BATTLEBLASTER_API ATank : public ABasePawn
+UCLASS(Blueprintable, BlueprintType)
+class BATTLEBLASTER_API APlayerPawn : public ABasePawn
 {
-	GENERATED_BODY()	
+	GENERATED_BODY()
 
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	ATank();
-	// Called every frame
+public:
+	APlayerPawn();
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, Category = "Control|Input")
@@ -46,18 +42,17 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Control|Input")
 	UInputAction* FireAction;
 
-
 	UPROPERTY(VisibleAnywhere)
 	USpringArmComponent* SpringArmComp;
 
-	UPROPERTY(VisibleAnywhere)	
+	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
 	UPROPERTY(EditAnywhere, Category = "ControlProperties|Movement")
 	float Speed = 300.0f;
 
 	UPROPERTY(EditAnywhere, Category = "ControlProperties|Movement")
-	float TurnRate = 5.0f;
+	float TurnRate = 45.0f; // Ajustat pentru o rotație fluidă generală
 
 	APlayerController* PlayerController;
 	bool IsAlive;
@@ -65,7 +60,7 @@ public:
 	bool bCanFire = true;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Combat")
-	float FireCooldown = 5.0f;
+	float FireCooldown = 0.5f; // Timp redus (stil Isaac) în loc de 5 secunde!
 
 	FTimerHandle FireTimerHandle;
 	virtual void Fire() override;

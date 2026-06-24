@@ -16,15 +16,15 @@ void ABattleBlasterGameMode::BeginPlay()
 	TowerCount = Towers.Num();
 
 	if (APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0)) {
-		Tank = Cast<ATank>(PlayerPawn);
-		if (Tank == nullptr) {
+		Player = Cast<APlayerPawn>(PlayerPawn);
+		if (Player == nullptr) {
 			UE_LOG(LogTemp, Display, TEXT("Failed to find player tank!"));
 		}
 	}
 
 	for (AActor* actor : Towers) {
 		if (ATower* Tower = Cast<ATower>(actor)) {
-			Tower->Tank = Tank;
+			Tower->PlayerPawn = Player;
 		}
 	}
 
@@ -56,7 +56,7 @@ void ABattleBlasterGameMode::OnCountdownTimerTimeout()
 		ScreenMessageWidget->SetMessageText(FString::FromInt(CountdownSeconds));
 	}
 	else if (CountdownSeconds == 0) {
-		Tank->SetPlayerEnabled(true);
+		Player->SetPlayerEnabled(true);
 		//UE_LOG(LogTemp, Display, TEXT("GO!"));
 		ScreenMessageWidget->SetMessageText("Start!");
 	}
@@ -71,8 +71,8 @@ void ABattleBlasterGameMode::ActorDied(AActor* DeadActor)
 {
 	bool IsGameOver = false;
 
-	if (DeadActor == Tank) {
-		Tank->HandleDestruction();
+	if (DeadActor == Player) {
+		Player->HandleDestruction();
 		IsGameOver = true;
 	}
 	else {
