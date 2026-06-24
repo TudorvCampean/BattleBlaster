@@ -6,6 +6,7 @@
 #include "GameFramework/Controller.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
+#include "Modifiers/ProjectileModifiers/ProjectileModifier.h"
 
 // Sets default values
 AProjectile::AProjectile()
@@ -22,6 +23,20 @@ AProjectile::AProjectile()
 	TrailParticles->SetupAttachment(RootComponent);
 }
 
+void AProjectile::InitializeModifiers(const TArray<TSubclassOf<UProjectileModifier>>& ModifiersToApply)
+{
+	for (TSubclassOf<UProjectileModifier> ModifierClass : ModifiersToApply) {
+		if (ModifierClass) {
+			//the projectile own the modifier in memory
+			UProjectileModifier* NewMod = NewObject<UProjectileModifier>(this, ModifierClass);
+			if (NewMod) {
+				ActiveModifiers.Add(NewMod);
+				NewMod->OnProjectileSpawn(this);
+			}
+		}
+	}
+}
+
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
@@ -35,20 +50,39 @@ void AProjectile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	for (UProjectileModifier* Modifier : ActiveModifiers) {
+		if (Modifier) {
+			Modifier->OnProjectileTick(this, DeltaTime);
+		}
+	}
+
 }
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	AActor* MyOwner = GetOwner();
-	if (MyOwner && OtherActor && OtherActor != this && OtherActor != GetOwner()) {
-		
-		if (OtherActor->IsA(APawn::StaticClass())) {
-			UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, UDamageType::StaticClass());
-		}	
-		DisplayEffects(Hit);
+	if (!MyOwner || !OtherActor || OtherActor == this || OtherActor == MyOwner)
+		return;
+
+	if (OtherActor->IsA(APawn::StaticClass())) {
+		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, UDamageType::StaticClass());
 	}
-	Destroy();
+
+	bool bShouldKeepAlive = false;
+	for (UProjectileModifier* Modifier : ActiveModifiers) {
+		if (Modifier && Modifier->OnProjectileHit(this, Hit, OtherActor)) {
+			bShouldKeepAlive = true;
+		}
+	}
+
+	if (!bShouldKeepAlive)
+	{
+		DisplayEffects(Hit);
+		Destroy();
+	}
 }
+		
+		
 
 void AProjectile::DisplayEffects(const FHitResult& Hit)
 {	
