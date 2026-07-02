@@ -9,6 +9,7 @@
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class UCharacterModifier;
 
 UCLASS(Blueprintable, BlueprintType)
 class BATTLEBLASTER_API APlayerCharacter : public ABaseCharacter
@@ -42,14 +43,15 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
-protected:
-	// CORECTAT: Adăugat parantezele () care lipseau!
+	
+protected:	
 	virtual void BeginPlay() override;
 
 private:
 	void MoveInput(const FInputActionValue& Value);
 	void TurnInput(const FInputActionValue& Value);
 	void HandleJump();
+	
 
 	APlayerController* PlayerController;
 };

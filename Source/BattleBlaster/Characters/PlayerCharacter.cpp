@@ -4,6 +4,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Modifiers/CharacterModifiers/CharacterModifier.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -29,6 +30,7 @@ void APlayerCharacter::BeginPlay()
 			}
 		}
 	}
+	
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -41,7 +43,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 			RotateTurretHorizontal(HitResult.ImpactPoint);
 			AimBarrelVertical(HitResult.ImpactPoint);
 		}
-	}
+	}	
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
