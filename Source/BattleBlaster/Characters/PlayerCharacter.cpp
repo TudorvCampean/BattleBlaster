@@ -30,10 +30,7 @@ void APlayerCharacter::BeginPlay()
 			}
 		}
 	}
-
-	for (TSubclassOf<UCharacterModifier> ModClass : InitialModifiers) {
-		AddCharacterModifier(ModClass);
-	}
+	
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -46,13 +43,7 @@ void APlayerCharacter::Tick(float DeltaTime)
 			RotateTurretHorizontal(HitResult.ImpactPoint);
 			AimBarrelVertical(HitResult.ImpactPoint);
 		}
-	}
-
-	for (UCharacterModifier* Modifier : ActiveModifiers) {
-		if (Modifier) {
-			Modifier->OnTick(this, DeltaTime);
-		}
-	}
+	}	
 }
 
 void APlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -96,16 +87,4 @@ void APlayerCharacter::TurnInput(const FInputActionValue& Value)
 void APlayerCharacter::HandleJump()
 {	
 	Jump();
-}
-
-void APlayerCharacter::AddCharacterModifier(TSubclassOf<UCharacterModifier> ModifierClass) {
-	if (!ModifierClass)
-		return;
-
-	UCharacterModifier* NewMod = NewObject<UCharacterModifier>(this, ModifierClass);
-	if (NewMod) {
-		ActiveModifiers.Add(NewMod);
-		NewMod->OnApply(this);
-	}
-
 }

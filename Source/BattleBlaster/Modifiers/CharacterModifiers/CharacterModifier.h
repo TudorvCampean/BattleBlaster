@@ -29,5 +29,9 @@ public:
 	void OnRemove(ABaseCharacter* TargetCharacter);
 	virtual void OnRemove_Implementation(ABaseCharacter* TargetCharacter){}
 
+	UFUNCTION(BlueprintNativeEvent, Category = "Modifier Hooks")
+	float ModifyIncomingDamage(float Damage);
+	virtual float ModifyIncomingDamage_Implementation(float Damage) { return Damage; }
+
 	
 };

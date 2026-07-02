@@ -17,6 +17,9 @@ AProjectile::AProjectile()
 	ProjectileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ProjectileMesh"));
 	SetRootComponent(ProjectileMesh);
 
+	ProjectileMesh->SetNotifyRigidBodyCollision(true);
+	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);
+
 	ProjectileMovementComponent = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovementComponent"));	
 
 	TrailParticles = CreateDefaultSubobject<UNiagaraComponent>(TEXT("TrailParticles"));
@@ -42,7 +45,18 @@ void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
 
-	ProjectileMesh->OnComponentHit.AddDynamic(this, &AProjectile::OnHit);	
+	for (TSubclassOf<UProjectileModifier> ModClass : InitialModifiers)
+	{
+		if (ModClass)
+		{
+			UProjectileModifier* NewMod = NewObject<UProjectileModifier>(this, ModClass);
+			if (NewMod)
+			{
+				ActiveModifiers.Add(NewMod);				
+				NewMod->OnProjectileSpawn(this);
+			}
+		}
+	}
 }
 
 // Called every frame
@@ -63,10 +77,7 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 	AActor* MyOwner = GetOwner();
 	if (!MyOwner || !OtherActor || OtherActor == this || OtherActor == MyOwner)
 		return;
-
-	if (OtherActor->IsA(APawn::StaticClass())) {
-		UGameplayStatics::ApplyDamage(OtherActor, Damage, MyOwner->GetInstigatorController(), this, UDamageType::StaticClass());
-	}
+	
 
 	bool bShouldKeepAlive = false;
 	for (UProjectileModifier* Modifier : ActiveModifiers) {
@@ -77,6 +88,16 @@ void AProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 	if (!bShouldKeepAlive)
 	{
+		if (OtherActor->IsA(APawn::StaticClass())) {
+			UGameplayStatics::ApplyDamage(
+				OtherActor,
+				Damage,
+				MyOwner ? MyOwner->GetInstigatorController() : nullptr,
+				this,
+				UDamageType::StaticClass()
+			);
+		}
+
 		DisplayEffects(Hit);
 		Destroy();
 	}

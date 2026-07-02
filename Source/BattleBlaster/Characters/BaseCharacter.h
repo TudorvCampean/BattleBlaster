@@ -8,6 +8,7 @@ class UHealthComponent;
 class AProjectile;
 class UNiagaraSystem;
 class USoundBase;
+class UCharacterModifier;
 
 UCLASS(Blueprintable)
 class BATTLEBLASTER_API ABaseCharacter : public ACharacter
@@ -16,6 +17,7 @@ class BATTLEBLASTER_API ABaseCharacter : public ACharacter
 
 public:
 	ABaseCharacter();
+	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, Category = "Components|Mesh")
 	UStaticMeshComponent* BaseMesh;
@@ -41,9 +43,22 @@ public:
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	USoundBase* DeathSound;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modifiers")
+	TArray<TSubclassOf<UCharacterModifier>> InitialModifiers;
+
+	UFUNCTION(BlueprintCallable, Category = "Modifiers")
+	void AddCharacterModifier(TSubclassOf<UCharacterModifier> ModifierClass);
+
+	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
+
 	void RotateTurretHorizontal(FVector LookAtTarget);
 	void AimBarrelVertical(FVector LookAtTarget);
 
 	virtual void Fire();
 	virtual void HandleDestruction();
+
+protected:
+	virtual void BeginPlay() override;
+	UPROPERTY()
+	TArray<UCharacterModifier*> ActiveModifiers;
 };

@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Mechanic")
 	float Damage = 25.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile Mechanic|Modifiers")
+	TArray<TSubclassOf<UProjectileModifier>> InitialModifiers;
+
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
