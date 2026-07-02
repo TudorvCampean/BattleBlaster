@@ -9,6 +9,7 @@
 class UCameraComponent;
 class UInputMappingContext;
 class UInputAction;
+class UCharacterModifier;
 
 UCLASS(Blueprintable, BlueprintType)
 class BATTLEBLASTER_API APlayerCharacter : public ABaseCharacter
@@ -42,6 +43,12 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* CameraComp;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modifiers")
+	TArray<TSubclassOf<UCharacterModifier>> InitialModifiers;
+
+	UFUNCTION(BlueprintCallable, Category = "Modifiers")
+	void AddCharacterModifier(TSubclassOf<UCharacterModifier> ModifierClass);
+
 protected:
 	// CORECTAT: Adăugat parantezele () care lipseau!
 	virtual void BeginPlay() override;
@@ -50,6 +57,9 @@ private:
 	void MoveInput(const FInputActionValue& Value);
 	void TurnInput(const FInputActionValue& Value);
 	void HandleJump();
+
+	UPROPERTY()
+	TArray<UCharacterModifier*> ActiveModifiers;
 
 	APlayerController* PlayerController;
 };

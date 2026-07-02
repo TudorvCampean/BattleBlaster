@@ -4,6 +4,7 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Modifiers/CharacterModifiers/CharacterModifier.h"
 
 APlayerCharacter::APlayerCharacter()
 {
@@ -29,6 +30,10 @@ void APlayerCharacter::BeginPlay()
 			}
 		}
 	}
+
+	for (TSubclassOf<UCharacterModifier> ModClass : InitialModifiers) {
+		AddCharacterModifier(ModClass);
+	}
 }
 
 void APlayerCharacter::Tick(float DeltaTime)
@@ -40,6 +45,12 @@ void APlayerCharacter::Tick(float DeltaTime)
 		if (PlayerController->GetHitResultUnderCursor(ECC_WorldStatic, false, HitResult)) {
 			RotateTurretHorizontal(HitResult.ImpactPoint);
 			AimBarrelVertical(HitResult.ImpactPoint);
+		}
+	}
+
+	for (UCharacterModifier* Modifier : ActiveModifiers) {
+		if (Modifier) {
+			Modifier->OnTick(this, DeltaTime);
 		}
 	}
 }
@@ -85,4 +96,16 @@ void APlayerCharacter::TurnInput(const FInputActionValue& Value)
 void APlayerCharacter::HandleJump()
 {	
 	Jump();
+}
+
+void APlayerCharacter::AddCharacterModifier(TSubclassOf<UCharacterModifier> ModifierClass) {
+	if (!ModifierClass)
+		return;
+
+	UCharacterModifier* NewMod = NewObject<UCharacterModifier>(this, ModifierClass);
+	if (NewMod) {
+		ActiveModifiers.Add(NewMod);
+		NewMod->OnApply(this);
+	}
+
 }
