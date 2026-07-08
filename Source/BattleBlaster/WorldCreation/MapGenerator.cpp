@@ -60,11 +60,23 @@ void AMapGenerator::GenerateMap()
 			bool bIsPlayerSpawnTile = (X == 2 && Y == 2);
 
 			TSubclassOf<AActor> SelectedTileClass = nullptr;
+			FRotator TileRotation = FRotator::ZeroRotator;
 
 			if (bIsBorder) {
 				SelectedTileClass = BoundaryWallClass;
+
+				
+				if (X == 0 && Y > 0) {					
+					TileRotation = FRotator(0.f, -90.f, 0.f);
+				}
+				else if (X == GridWidth - 1 && Y < GridHeight - 1) {					
+					TileRotation = FRotator(0.f, 90.f, 0.f);
+				}				
+				else if (Y == GridHeight - 1) {					
+					TileRotation = FRotator(0.f, 180.f, 0.f);
+				}
 			}
-			else if(bIsPlayerSpawnTile){
+			else if (bIsPlayerSpawnTile) {
 				SelectedTileClass = AvailableTileClasses[0];
 				SafePlayerSpawnLocation = SpawnLocation + FVector(0.f, 0.f, 100.f);
 			}
@@ -74,12 +86,11 @@ void AMapGenerator::GenerateMap()
 			}
 
 			if (SelectedTileClass) {
-
 				FActorSpawnParameters SpawnParams;
 				SpawnParams.Owner = this;
 				SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
-				AActor* SpawnedTile = GetWorld()->SpawnActor<AActor>(SelectedTileClass, SpawnLocation, SpawnRotation, SpawnParams);
+				AActor* SpawnedTile = GetWorld()->SpawnActor<AActor>(SelectedTileClass, SpawnLocation, TileRotation, SpawnParams);
 
 				if (SpawnedTile) {
 					SpawnedTiles.Add(SpawnedTile);
