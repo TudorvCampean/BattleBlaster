@@ -1,17 +1,15 @@
 #include "ComputerCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "PlayerCharacter.h"
+#include "AIController.h"
 
 AComputerCharacter::AComputerCharacter()
 {
 	PrimaryActorTick.bCanEverTick = true;
-}
-
-void AComputerCharacter::HandleDestruction()
-{
-	Super::HandleDestruction();
-	
-	Destroy();
+	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
+	AttackStoppingDistance = 50.0f;
+	AttackRange = 700.0f;
+	AttackRate = 1.5f;
 }
 
 void AComputerCharacter::BeginPlay()
@@ -19,31 +17,46 @@ void AComputerCharacter::BeginPlay()
 	Super::BeginPlay();
 	AActor* BasePawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	PlayerTarget = Cast<APlayerCharacter>(BasePawn);
-	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AComputerCharacter::CheckAttackCondition, FireRate, true);
+
+	GetWorldTimerManager().SetTimer(AttackTimerHandle, this, &AComputerCharacter::CheckAttackCondition, AttackRate, true);
+
+	if (bShouldChasePlayer) ActivateEnemy();
 }
 
-void AComputerCharacter::Tick(float DeltaTime)
+void AComputerCharacter::ActivateEnemy()
 {
-	Super::Tick(DeltaTime);
+	bShouldChasePlayer = true;
+	GetWorldTimerManager().SetTimer(MovementTimerHandle, this, &AComputerCharacter::UpdatePathfinding, 0.3f, true);
+}
 
-	if (PlayerTarget)
+void AComputerCharacter::UpdatePathfinding()
+{	
+	if (PlayerTarget && bShouldChasePlayer)
 	{
-		RotateTurretHorizontal(PlayerTarget->GetActorLocation());
-		AimBarrelVertical(PlayerTarget->GetActorLocation());
-	}
-}
-
-void AComputerCharacter::CheckAttackCondition()
-{
-	if (PlayerTarget && IsPlayerInAttackRange())
-	{		
-		Fire();
+		AAIController* AICont = Cast<AAIController>(GetController());
+		if (AICont) 
+			AICont->MoveToActor(PlayerTarget, AttackStoppingDistance);
 	}
 }
 
 bool AComputerCharacter::IsPlayerInAttackRange()
 {
 	if (!PlayerTarget) return false;
-	float Distance = FVector::Dist(GetActorLocation(), PlayerTarget->GetActorLocation());
-	return Distance <= FireRange;
+	return FVector::Dist(GetActorLocation(), PlayerTarget->GetActorLocation()) <= AttackRange;
+}
+
+void AComputerCharacter::CheckAttackCondition()
+{
+	if (PlayerTarget && IsPlayerInAttackRange())
+	{
+		Fire();
+	}
+}
+
+void AComputerCharacter::HandleDestruction()
+{
+	GetWorldTimerManager().ClearTimer(MovementTimerHandle);
+	GetWorldTimerManager().ClearTimer(AttackTimerHandle);
+	Super::HandleDestruction();
+	Destroy();
 }

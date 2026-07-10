@@ -13,21 +13,33 @@ class BATTLEBLASTER_API AComputerCharacter : public ABaseCharacter
 
 public:
 	AComputerCharacter();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Movement")
+	bool bShouldChasePlayer = true;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Movement")
+	float AttackStoppingDistance = 50.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Combat")
+	float AttackRange = 700.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Combat")
+	float AttackRate = 1.5f;
+
+	UFUNCTION(BlueprintCallable, Category = "AI|Combat")
+	void ActivateEnemy();
 	virtual void HandleDestruction() override;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Combat")
-	float FireRange = 700.0f;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Combat")
-	float FireRate = 1.5f;
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
+	virtual void UpdatePathfinding();
+	virtual void CheckAttackCondition();
+	virtual bool IsPlayerInAttackRange();
+
+	UPROPERTY(BlueprintReadOnly, Category = "AI")
+	APlayerCharacter* PlayerTarget;
 
 private:
-	APlayerCharacter* PlayerTarget;
+	FTimerHandle MovementTimerHandle;
 	FTimerHandle AttackTimerHandle;
-	void CheckAttackCondition();
-	bool IsPlayerInAttackRange();
 };

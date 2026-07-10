@@ -21,27 +21,27 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void HandleDestruction() override;
+	virtual void Fire() override;
 
-	UPROPERTY(EditAnywhere, Category = "Control|Input")
-	UInputMappingContext* DefaultMappingContext;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent* BaseMesh;
 
-	UPROPERTY(EditAnywhere, Category = "Control|Input")
-	UInputAction* MoveAction;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent* TurretMesh;
 
-	UPROPERTY(EditAnywhere, Category = "Control|Input")
-	UInputAction* TurnAction;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	UStaticMeshComponent* TurretBarrelMesh;
 
-	UPROPERTY(EditAnywhere, Category = "Control|Input")
-	UInputAction* FireAction;
+	UPROPERTY(VisibleAnywhere, Category = "Components")
+	USceneComponent* ProjectileSpawnPoint;
 
-	UPROPERTY(EditAnywhere, Category = "Control|Input")
-	UInputAction* JumpAction;
-
-	UPROPERTY(VisibleAnywhere)
-	USpringArmComponent* SpringArmComp;
-
-	UPROPERTY(VisibleAnywhere)
-	UCameraComponent* CameraComp;
+	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputMappingContext* DefaultMappingContext;
+	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* MoveAction;
+	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* TurnAction;
+	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* FireAction;
+	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* JumpAction;
+	UPROPERTY(VisibleAnywhere) USpringArmComponent* SpringArmComp;
+	UPROPERTY(VisibleAnywhere) UCameraComponent* CameraComp;
 
 	
 protected:	
@@ -51,6 +51,8 @@ private:
 	void MoveInput(const FInputActionValue& Value);
 	void TurnInput(const FInputActionValue& Value);
 	void HandleJump();
+	void RotateTurretHorizontal(FVector LookAtTarget);
+	void AimBarrelVertical(FVector LookAtTarget);
 	
 
 	APlayerController* PlayerController;

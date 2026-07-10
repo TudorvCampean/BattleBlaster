@@ -19,29 +19,17 @@ public:
 	ABaseCharacter();
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components|Mesh")
-	UStaticMeshComponent* BaseMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components|Mesh")
-	UStaticMeshComponent* TurretMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components|Mesh")
-	UStaticMeshComponent* TurretBarrelMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components|Mesh")
-	USceneComponent* ProjectileSpawnPoint;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components|Health")
+	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UHealthComponent* HealthComponent;
 
 	UPROPERTY(EditAnywhere, Category = "Combat")
-	TSubclassOf<AProjectile> ProjectileClass;
+	TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Effects")
-	UNiagaraSystem* DestructionParticles;
+	class UNiagaraSystem* DestructionParticles;
 
 	UPROPERTY(EditAnywhere, Category = "Effects")
-	USoundBase* DeathSound;
+	class USoundBase* DeathSound;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Modifiers")
 	TArray<TSubclassOf<UCharacterModifier>> InitialModifiers;
@@ -50,15 +38,13 @@ public:
 	void AddCharacterModifier(TSubclassOf<UCharacterModifier> ModifierClass);
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
-
-	void RotateTurretHorizontal(FVector LookAtTarget);
-	void AimBarrelVertical(FVector LookAtTarget);
-
-	virtual void Fire();
+	
+	virtual void Fire() {}
 	virtual void HandleDestruction();
 
 protected:
 	virtual void BeginPlay() override;
+
 	UPROPERTY()
 	TArray<UCharacterModifier*> ActiveModifiers;
 };
