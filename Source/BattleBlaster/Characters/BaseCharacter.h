@@ -5,12 +5,11 @@
 #include "BaseCharacter.generated.h"
 
 class UHealthComponent;
-class AProjectile;
 class UNiagaraSystem;
 class USoundBase;
 class UCharacterModifier;
 
-UCLASS(Blueprintable)
+UCLASS(Abstract)
 class BATTLEBLASTER_API ABaseCharacter : public ACharacter
 {
 	GENERATED_BODY()
@@ -21,9 +20,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, Category = "Components")
 	UHealthComponent* HealthComponent;
-
-	UPROPERTY(EditAnywhere, Category = "Combat")
-	TSubclassOf<class AProjectile> ProjectileClass;
 
 	UPROPERTY(EditAnywhere, Category = "Effects")
 	class UNiagaraSystem* DestructionParticles;
@@ -39,7 +35,7 @@ public:
 
 	virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, class AController* EventInstigator, class AActor* DamageCauser) override;
 	
-	virtual void Fire() {}
+	virtual void Attack() {}
 	virtual void HandleDestruction();
 
 protected:

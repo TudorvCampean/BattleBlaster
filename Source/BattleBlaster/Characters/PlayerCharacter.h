@@ -7,9 +7,11 @@
 #include "PlayerCharacter.generated.h"
 
 class UCameraComponent;
+class USpringArmComponent;
 class UInputMappingContext;
 class UInputAction;
 class UCharacterModifier;
+class AProjectile;
 
 UCLASS(Blueprintable, BlueprintType)
 class BATTLEBLASTER_API APlayerCharacter : public ABaseCharacter
@@ -17,43 +19,43 @@ class BATTLEBLASTER_API APlayerCharacter : public ABaseCharacter
 	GENERATED_BODY()
 
 public:
-	APlayerCharacter();
-	virtual void Tick(float DeltaTime) override;
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-	virtual void HandleDestruction() override;
-	virtual void Fire() override;
+	APlayerCharacter();	
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;	
+	virtual void Attack() override;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* BaseMesh;
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	TSubclassOf<class AProjectile> ProjectileClass;
 
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* TurretMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	UStaticMeshComponent* TurretBarrelMesh;
-
-	UPROPERTY(VisibleAnywhere, Category = "Components")
-	USceneComponent* ProjectileSpawnPoint;
-
-	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputMappingContext* DefaultMappingContext;
-	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* MoveAction;
-	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* TurnAction;
-	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* FireAction;
-	UPROPERTY(EditAnywhere, Category = "Control|Input") UInputAction* JumpAction;
-	UPROPERTY(VisibleAnywhere) USpringArmComponent* SpringArmComp;
-	UPROPERTY(VisibleAnywhere) UCameraComponent* CameraComp;
-
-	
-protected:	
+	UPROPERTY(EditAnywhere, Category = "Combat")
+	FName MuzzleSocketName = TEXT("Muzzle");	
+protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	USpringArmComponent* SpringArmComp;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Camera")
+	UCameraComponent* CameraComp;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputMappingContext* DefaultMappingContext;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* MoveAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* FireAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	class UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, Category = "Input")
+	UInputAction* JumpAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Movement")
+	int32 MaxJumps = 1;
 
 private:
 	void MoveInput(const FInputActionValue& Value);
-	void TurnInput(const FInputActionValue& Value);
-	void HandleJump();
-	void RotateTurretHorizontal(FVector LookAtTarget);
-	void AimBarrelVertical(FVector LookAtTarget);
-	
-
-	APlayerController* PlayerController;
+	void LookInput(const FInputActionValue& Value);
 };

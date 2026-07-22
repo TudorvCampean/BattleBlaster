@@ -26,6 +26,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Combat")
 	float AttackRate = 1.5f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "AI|Rewards")
+	float ExperienceReward = 10.0f;
+
 	UFUNCTION(BlueprintCallable, Category = "AI|Combat")
 	void ActivateEnemy();
 	virtual void HandleDestruction() override;

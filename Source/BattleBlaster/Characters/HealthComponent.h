@@ -16,25 +16,29 @@ public:
 	// Sets default values for this component's properties
 	UHealthComponent();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
+	float MaxHealth = 100.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	float Health;
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	void Heal(float HealAmount);
+
+	UFUNCTION(BlueprintPure, Category = "Health")
+	float GetHealthPercent() const { return Health / MaxHealth; }
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
-
-public:
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	UPROPERTY(EditAnywhere)
-	float MaxHealth = 100.0f;
-
-	UPROPERTY(VisibleAnywhere)
-	float Health;
-
-	ABattleBlasterGameMode* BattleBlasterGameMode;
 
 	UFUNCTION()
 	void OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 	void CheckHealth(float Damage, AActor* DamagedActor);
 
+private:
+	UPROPERTY()
+	ABattleBlasterGameMode* BattleBlasterGameMode;
+	bool bIsDead = false;
 };
