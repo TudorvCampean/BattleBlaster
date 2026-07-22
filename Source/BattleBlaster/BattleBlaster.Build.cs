@@ -10,7 +10,16 @@ public class BattleBlaster : ModuleRules
 
         PublicIncludePaths.Add(ModuleDirectory);
 
-        PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "UMG", "Niagara", "AIModule" });
+        PublicDependencyModuleNames.AddRange(new string[] { 
+			"Core",
+			"CoreUObject",
+			"Engine",
+			"InputCore",
+			"EnhancedInput",
+			"UMG",
+			"Niagara",
+			"AIModule",
+        });
 
 		PrivateDependencyModuleNames.AddRange(new string[] {  });
 

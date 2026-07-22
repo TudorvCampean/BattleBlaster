@@ -5,7 +5,7 @@
 
 AComputerCharacter::AComputerCharacter()
 {
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 	AttackStoppingDistance = 50.0f;
 	AttackRange = 700.0f;
@@ -49,7 +49,7 @@ void AComputerCharacter::CheckAttackCondition()
 {
 	if (PlayerTarget && IsPlayerInAttackRange())
 	{
-		Fire();
+		Attack();
 	}
 }
 
