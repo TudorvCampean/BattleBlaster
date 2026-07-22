@@ -1,7 +1,6 @@
 #include "BaseCharacter.h"
 #include "HealthComponent.h"
 #include "Modifiers/CharacterModifiers/CharacterModifier.h"
-#include "Projectiles/Projectile.h"
 #include "NiagaraFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
 

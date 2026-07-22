@@ -8,7 +8,7 @@
 UHealthComponent::UHealthComponent()
 {
 	
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 }
 
 // Called when the game starts
@@ -17,6 +17,7 @@ void UHealthComponent::BeginPlay()
 	Super::BeginPlay();
 
 	Health = MaxHealth;
+	bIsDead = false;
 
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::OnDamageTaken);
 
@@ -26,11 +27,6 @@ void UHealthComponent::BeginPlay()
 	}
 }
 
-// Called every frame
-void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-}
 
 void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
@@ -39,13 +35,26 @@ void UHealthComponent::OnDamageTaken(AActor* DamagedActor, float Damage, const U
 
 void UHealthComponent::CheckHealth(float Damage, AActor*DamagedActor)
 {
+	if (bIsDead)
+		return;
+
 	if (Damage > 0.0f) {
-		Health -= Damage;
+		Health = FMath::Clamp(Health - Damage, 0.0f, MaxHealth);
 		if (Health <= 0.0f) {
+			bIsDead = true;
+
 			if (BattleBlasterGameMode) {
 				BattleBlasterGameMode->ActorDied(DamagedActor);
 			}
+
 		}
 	}
+}
+
+void UHealthComponent::Heal(float HealAmount)
+{
+	if (bIsDead || HealAmount <= 0.0f) return;
+
+	Health = FMath::Clamp(Health + HealAmount, 0.0f, MaxHealth);
 }
 
