@@ -5,6 +5,7 @@
 #include "BattleBlasterGameMode.generated.h"
 
 class APlayerCharacter;
+class ASpawnManager;
 
 UCLASS()
 class BATTLEBLASTER_API ABattleBlasterGameMode : public AGameModeBase
@@ -16,7 +17,13 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	UPROPERTY(EditDefaultsOnly, Category = "Spawning")
+	TSubclassOf<ASpawnManager> SpawnManagerClass;
 
 private:	
+	UPROPERTY()
 	APlayerCharacter* PlayerCharacter;
+
+	UPROPERTY()
+	ASpawnManager* SpawnManager;
 };
